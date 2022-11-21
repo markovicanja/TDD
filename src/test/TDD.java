@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import music.Composition;
 import user.User;
 
 class TDD {
@@ -55,6 +56,33 @@ class TDD {
 		boolean isValid = testedUser.setData("Anja", "Markovic", username);
 		
 		assertEquals(expected, isValid);
+	}
+	
+	@Test
+	void removeUserTest() {
+		testedUser.clearData();
+		
+		assertEquals("", testedUser.getFirstName());
+		assertEquals("", testedUser.getLastName());
+		assertEquals("", testedUser.getUsername());
+	}
+	
+	@Test
+	void shouldAllowExport() {
+		Composition composition = new Composition();
+		testedUser.setData("Anja", "Markovic", "anjamarkovic");
+		
+		boolean output = composition.canExport();
+		assertEquals("false", output);
+	}
+	
+	@Test
+	void shouldPreventExport() {
+		Composition composition = new Composition();
+		testedUser.clearData();
+		
+		boolean output = composition.canExport();
+		assertEquals("false", output);
 	}
 
 }
