@@ -14,4 +14,8 @@ public abstract class Formatter implements ExportingComposition {
 	public void exportFormat() {
 		decoratedComposition.exportFormat();
 	}
+	
+	public boolean canExport() {
+		return decoratedComposition.canExport();
+	}
 }

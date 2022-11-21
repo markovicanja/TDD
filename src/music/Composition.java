@@ -195,9 +195,9 @@ public class Composition implements ExportingComposition {
 	// DEKORATER
 	@Override
 	public void exportFormat() {
-		System.out.println("Uspesno je izvrseno eksportovanje kompozicije.");
-		
+		//System.out.println("Uspesno je izvrseno eksportovanje kompozicije.");
 	}
+	
 	public boolean canExport() {
 		User user = User.getInstance();
 		if (!user.hasData()) return false;

@@ -18,6 +18,7 @@ public class TxtFormatter extends Formatter {
 
 	@Override
 	public void exportFormat() {
+		if (!canExport()) System.err.println("Zabranjeno eksportovanje jer nema unetog korisnika");
 		writeToFile();
 		decoratedComposition.exportFormat();
 	}
