@@ -18,7 +18,7 @@ public class Program extends Frame implements ActionListener, ItemListener {
 	private boolean txtExported, midiExported, closing;
 	private ClosingDialog dialog=new ClosingDialog(this, "Napustanje programa", true);
 	
-	private Button addUser;
+	private Button addUser, removeUser;
 	private UserDialog userDialog = new UserDialog(this, "User", true);
 	
 	private class ClosingDialog extends Dialog implements ActionListener {
@@ -133,9 +133,7 @@ public class Program extends Frame implements ActionListener, ItemListener {
 				public void actionPerformed(ActionEvent e) {
 					User user = User.getInstance();
 					if (!user.setData(firstName.getText(), lastName.getText(), username.getText())
-							|| firstName.getText().equals("")
-							|| lastName.getText().equals("")
-							|| username.getText().equals("")) {
+							|| !user.hasData()) {
 						error.setVisible(true);
 					}
 					else {
@@ -250,8 +248,32 @@ public class Program extends Frame implements ActionListener, ItemListener {
 		export=new Button("Export"); panels[4].add(export); export.addActionListener(this);
 		
 		addUser = new Button("Add user");
-		addUser.addActionListener(this);
+		addUser.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				userDialog.setVisible(true);
+				addUser.setEnabled(false);
+				removeUser.setEnabled(true);
+			}
+		});
+		
+		removeUser = new Button("Remove user");
+		removeUser.setEnabled(false);
+		removeUser.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				User user = User.getInstance();
+				user.clearData();
+				addUser.setEnabled(true);
+				removeUser.setEnabled(false);
+				
+			}
+		});
+		
 		panels[5].add(addUser);
+		panels[5].add(removeUser);
 	}
 	
 	@Override
@@ -335,9 +357,6 @@ public class Program extends Frame implements ActionListener, ItemListener {
 				txtExported=true;
 			}
 			exportingComposition.exportFormat();
-		}
-		else if (e.getActionCommand() == "Add user") {
-			userDialog.setVisible(true);
 		}
 	}	
 	

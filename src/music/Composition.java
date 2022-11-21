@@ -10,6 +10,7 @@ import formatting.ExportingComposition;
 import iterator.Iterator;
 import iterator.List;
 import iterator.SymbolList;
+import user.User;
 
 public class Composition implements ExportingComposition {
 	public Map<Character, String> charMap = new HashMap<>();
@@ -196,5 +197,10 @@ public class Composition implements ExportingComposition {
 	public void exportFormat() {
 		System.out.println("Uspesno je izvrseno eksportovanje kompozicije.");
 		
+	}
+	public boolean canExport() {
+		User user = User.getInstance();
+		if (!user.hasData()) return false;
+		return true;
 	}
 }

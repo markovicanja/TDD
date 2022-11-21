@@ -67,13 +67,28 @@ class TDD {
 		assertEquals("", testedUser.getUsername());
 	}
 	
+	@ParameterizedTest
+	@CsvSource({
+		"Anja, Markovic, anjamarkovic, true",
+		"'' , '', '', false",
+		"Anja, Markovic, '', false",
+		"Anja, '',anjamarkovic, false",
+		" '',Markovic, anjamarkovic, false"
+	})
+	void hasDataTest(String firstName, String lastName, String username, boolean expected) {
+		testedUser.setData(firstName, lastName, username);
+		boolean output = testedUser.hasData();
+		
+		assertEquals(expected, output);
+	}
+	
 	@Test
 	void shouldAllowExport() {
 		Composition composition = new Composition();
 		testedUser.setData("Anja", "Markovic", "anjamarkovic");
 		
 		boolean output = composition.canExport();
-		assertEquals("false", output);
+		assertEquals(true, output);
 	}
 	
 	@Test
@@ -82,7 +97,7 @@ class TDD {
 		testedUser.clearData();
 		
 		boolean output = composition.canExport();
-		assertEquals("false", output);
+		assertEquals(false, output);
 	}
 
 }

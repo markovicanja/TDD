@@ -39,4 +39,17 @@ public class User {
 		return uniqueInstance.username;
 	}
 
+	public void clearData() {
+		uniqueInstance.firstName = "";
+		uniqueInstance.lastName = "";
+		uniqueInstance.username = "";
+	}
+
+	public boolean hasData() {
+		if (uniqueInstance.firstName.equals("") ||
+				uniqueInstance.lastName.equals("") ||
+				uniqueInstance.username.equals("")) return false;
+		return true;
+	}
+
 }
