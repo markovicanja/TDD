@@ -1,4 +1,5 @@
 import music.*;
+import user.User;
 import formatting.*;
 import gui.*;
 import java.awt.*;
@@ -16,6 +17,9 @@ public class Program extends Frame implements ActionListener, ItemListener {
 	private Checkbox letters, notes, midi, txt, printNotes;
 	private boolean txtExported, midiExported, closing;
 	private ClosingDialog dialog=new ClosingDialog(this, "Napustanje programa", true);
+	
+	private Button addUser;
+	private UserDialog userDialog = new UserDialog(this, "User", true);
 	
 	private class ClosingDialog extends Dialog implements ActionListener {
 		private Label l;
@@ -90,6 +94,79 @@ public class Program extends Frame implements ActionListener, ItemListener {
 		}
 	}
 	
+	private class UserDialog extends Dialog implements ActionListener {
+		private Button submit;
+		private TextField firstName, lastName, username;
+		
+		public UserDialog(Frame f, String s, boolean b) {
+			super(f, s, b);
+			setSize(500,200);
+			setLocationRelativeTo(null);
+			Label l = new Label("Unesite podatke o korisniku",Label.CENTER);
+			this.add(l, "North");
+			Panel panel=new Panel(new GridLayout(5,1));
+			this.add(panel, "South");
+			
+			Panel pan1=new Panel();
+			pan1.add(new Label("First name:", Label.RIGHT));
+			firstName = new TextField("", 50); 
+			pan1.add(firstName);
+			
+			Panel pan2=new Panel();
+			pan2.add(new Label("Last name:", Label.RIGHT));
+			lastName = new TextField("", 50); 
+			pan2.add(lastName);
+			
+			Panel pan3=new Panel();
+			pan3.add(new Label("Username:", Label.RIGHT));
+			username = new TextField("", 50); 
+			pan3.add(username);
+			
+			Label error = new Label("Podaci nisu ispravno uneti", Label.CENTER);
+			error.setForeground(Color.red);
+			error.setVisible(false);
+			
+			submit = new Button("Submit");
+			submit.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					User user = User.getInstance();
+					if (!user.setData(firstName.getText(), lastName.getText(), username.getText())
+							|| firstName.getText().equals("")
+							|| lastName.getText().equals("")
+							|| username.getText().equals("")) {
+						error.setVisible(true);
+					}
+					else {
+						firstName.setText("");
+						lastName.setText("");
+						username.setText("");
+						error.setVisible(false);
+						
+						setVisible(false);
+					}
+				}
+			});
+			
+			panel.add(pan1); 
+			panel.add(pan2);
+			panel.add(pan3);
+			panel.add(submit);
+			panel.add(error);
+			
+			addWindowListener(new WindowAdapter() {
+				public void windowClosing(WindowEvent e) {
+					setVisible(false);
+				}
+			});
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			
+		}
+	}
+	
 	public Program() {
 		super("Piano");
 		setSize(1500,800);
@@ -123,7 +200,7 @@ public class Program extends Frame implements ActionListener, ItemListener {
 		player.setPiano(piano);
 		
 		Panel panel=new Panel(new GridLayout(2,1));
-		Panel north=new Panel(new GridLayout(5,1)); north.setBackground(Color.LIGHT_GRAY);
+		Panel north=new Panel(new GridLayout(6,1)); north.setBackground(Color.LIGHT_GRAY);
 		Panel center=new Panel(new BorderLayout());
 		center.add(ct, "Center");
 				
@@ -133,8 +210,8 @@ public class Program extends Frame implements ActionListener, ItemListener {
 		add(north, "North");
 		add(panel, "Center");
 		
-		Panel[] panels=new Panel[5];
-		for (int i=0; i<5; i++) {
+		Panel[] panels=new Panel[6];
+		for (int i=0; i<6; i++) {
 			panels[i]=new Panel();
 			north.add(panels[i]);
 		}
@@ -171,6 +248,10 @@ public class Program extends Frame implements ActionListener, ItemListener {
 		Label l=new Label("Export to: ", Label.CENTER); panels[4].add(l);
 		exportPath=new TextField("output.txt", 50); panels[4].add(exportPath);
 		export=new Button("Export"); panels[4].add(export); export.addActionListener(this);
+		
+		addUser = new Button("Add user");
+		addUser.addActionListener(this);
+		panels[5].add(addUser);
 	}
 	
 	@Override
@@ -254,7 +335,9 @@ public class Program extends Frame implements ActionListener, ItemListener {
 				txtExported=true;
 			}
 			exportingComposition.exportFormat();
-			
+		}
+		else if (e.getActionCommand() == "Add user") {
+			userDialog.setVisible(true);
 		}
 	}	
 	
