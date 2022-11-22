@@ -1,14 +1,13 @@
 package test;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-
 import exceptions.ExportForbiddenException;
+import formatting.TxtFormatter;
 import music.Composition;
 import user.User;
 
@@ -116,7 +115,7 @@ class TDD {
 	}
 	
 	@Test
-	void shouldReturnNoExportPath() {
+	void shouldThrowExportForbiddenException() {
 		testedUser.clearData();
 		
 		ExportForbiddenException thrown = Assertions.assertThrows(ExportForbiddenException.class, () -> {
@@ -124,5 +123,22 @@ class TDD {
 		}, "ExportForbiddenException was expected");
 		
 		assertEquals("Export is forbidden!", thrown.toString());
+	}
+	
+	@Test
+	void shouldReturnUsersSignature() {
+		testedUser.setData("Anja", "Markovic", "anjamarkovic");
+		String signature = testedUser.getSignature();
+		
+		assertEquals("Anja Markovic", signature);
+	}
+	
+	@Test 
+	void shouldReturnSignedText() {
+		testedUser.setData("Anja", "Markovic", "anjamarkovic");
+		TxtFormatter txtFormatter = new TxtFormatter(new Composition(), "directory");
+		
+		String expected = "\n\nBy: Anja Markovic";
+		assertEquals(expected, txtFormatter.appendSignature());
 	}
 }
