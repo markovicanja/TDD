@@ -1,7 +1,12 @@
 package formatting;
 
 import music.*;
+import user.User;
+
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import javax.sound.midi.*;
 
 import exceptions.OutOfBounds;
@@ -93,6 +98,8 @@ public class MidiFormatter extends Formatter {
 			mtm.setMessage(0x2F,bet,0);
 			me=new MidiEvent(mtm,actionTime);
 			t.add(me);
+			
+			Files.createDirectories(Paths.get(User.getInstance().getUsername()));
 			File f=new File(directory+".mid");
 			MidiSystem.write(s, 1, f);
 		}

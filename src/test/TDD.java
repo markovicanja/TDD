@@ -2,12 +2,13 @@ package test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import exceptions.OutOfBounds;
+import exceptions.ExportForbiddenException;
 import music.Composition;
 import user.User;
 
@@ -104,7 +105,12 @@ class TDD {
 	@Test 
 	void shouldReturnUserExportPath() {
 		testedUser.setData("Anja", "Markovic", "anjamarkovic");
-		String fileName = User.getExportPath("file.txt");
+		String fileName = "";
+		try {
+			fileName = User.getExportPath("file.txt");
+		} catch (ExportForbiddenException e) {
+			e.printStackTrace();
+		}
 		
 		assertEquals("anjamarkovic/file.txt", fileName);
 	}
@@ -113,6 +119,10 @@ class TDD {
 	void shouldReturnNoExportPath() {
 		testedUser.clearData();
 		
-		assertThrows(ExportForbiddenException.class, User.getExportPath("file.txt"));
+		ExportForbiddenException thrown = Assertions.assertThrows(ExportForbiddenException.class, () -> {
+			User.getExportPath("file.txt");
+		}, "ExportForbiddenException was expected");
+		
+		assertEquals("Export is forbidden!", thrown.toString());
 	}
 }

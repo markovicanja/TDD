@@ -3,9 +3,12 @@ package formatting;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import exceptions.OutOfBounds;
 import music.*;
+import user.User;
 
 public class TxtFormatter extends Formatter {
 	
@@ -25,10 +28,13 @@ public class TxtFormatter extends Formatter {
 	
 	private void writeToFile() {
 		try {
+			Files.createDirectories(Paths.get(User.getInstance().getUsername()));
 	    	BufferedWriter writer = new BufferedWriter(new FileWriter(directory));
 			writer.write(toString());
 			writer.close();
-		} catch (IOException e) {}
+		} catch (IOException e) {
+			System.err.println("Direktorijum nije pronadjen");
+		}
 	}
 	
 	public String toString() {

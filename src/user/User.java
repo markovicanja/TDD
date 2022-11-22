@@ -1,5 +1,7 @@
 package user;
 
+import exceptions.ExportForbiddenException;
+
 public class User {
 	
 	private static User uniqueInstance = null;
@@ -50,6 +52,11 @@ public class User {
 				uniqueInstance.lastName.equals("") ||
 				uniqueInstance.username.equals("")) return false;
 		return true;
+	}
+
+	public static String getExportPath(String string) throws ExportForbiddenException {
+		if (!uniqueInstance.hasData()) throw new ExportForbiddenException();
+		else return uniqueInstance.username + "/" + string; 
 	}
 
 }

@@ -6,6 +6,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.sound.midi.MidiUnavailableException;
 
+import exceptions.ExportForbiddenException;
+
 public class Program extends Frame implements ActionListener, ItemListener {
 	private Piano piano;
 	private Composition comp, recorded;
@@ -343,7 +345,13 @@ public class Program extends Frame implements ActionListener, ItemListener {
 			recorded.printComposition();
 		}
 		else if (e.getActionCommand()=="Export") {
-			String directory=exportPath.getText();
+			String directory = "";
+			try {
+				directory = User.getExportPath(exportPath.getText());
+			} catch (ExportForbiddenException e1) {
+				System.err.println("Eksportovanje je zabranjeno!");
+				return;
+			}
 			if (directory=="" || recorded==null) return;
 			
 			// DEKORATER
