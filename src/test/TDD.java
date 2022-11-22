@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import exceptions.OutOfBounds;
 import music.Composition;
 import user.User;
 
@@ -88,7 +89,7 @@ class TDD {
 		testedUser.setData("Anja", "Markovic", "anjamarkovic");
 		
 		boolean output = composition.canExport();
-		assertEquals(true, output);
+		assertTrue(output);
 	}
 	
 	@Test
@@ -97,7 +98,21 @@ class TDD {
 		testedUser.clearData();
 		
 		boolean output = composition.canExport();
-		assertEquals(false, output);
+		assertFalse(output);
 	}
-
+	
+	@Test 
+	void shouldReturnUserExportPath() {
+		testedUser.setData("Anja", "Markovic", "anjamarkovic");
+		String fileName = User.getExportPath("file.txt");
+		
+		assertEquals("anjamarkovic/file.txt", fileName);
+	}
+	
+	@Test
+	void shouldReturnNoExportPath() {
+		testedUser.clearData();
+		
+		assertThrows(ExportForbiddenException.class, User.getExportPath("file.txt"));
+	}
 }
