@@ -59,4 +59,8 @@ public class User {
 		else return uniqueInstance.username + "/" + string; 
 	}
 
+	public String getSignature() {
+		return firstName + " " + lastName;
+	}
+
 }

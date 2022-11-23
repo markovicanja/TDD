@@ -81,7 +81,13 @@ public class TxtFormatter extends Formatter {
 				sb.append("]");
 			}
 		}
+		String signature = appendSignature();
+		sb.append(signature);
 		return sb.toString();
+	}
+
+	public String appendSignature() {
+		return "\n\nBy: " + User.getInstance().getSignature();
 	}
 
 }
